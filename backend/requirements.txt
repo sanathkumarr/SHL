@@ -1,6 +1,7 @@
 fastapi
 uvicorn
-pandas
+pydantic
 sentence-transformers
 scikit-learn
+pandas
 numpy
