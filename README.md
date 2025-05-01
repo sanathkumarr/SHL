@@ -27,12 +27,20 @@ A GenAI-powered end-to-end system that recommends the most relevant SHL assessme
 
 ## 📁 Project Structure
 
-shl-assessment-recommender/ ├── frontend/ # React UI ├── backend/ # FastAPI backend │ ├── data/shl_assessments.csv │ ├── main.py │ ├── models/model.py │ └── utils/recommend.py ├── web-scraper/ # Selenium + BeautifulSoup-based scraper │ └── scraper.py ├── evaluate.py # Evaluation script using Recall@K / MAP@K ├── render.yaml # Render deployment config └── README.md
-
-markdown
-Always show details
-
-Copy
+```
+shl-assessment-recommender/
+├── frontend/              # React UI
+├── backend/               # FastAPI backend
+│   ├── data/shl_assessments.csv
+│   ├── main.py
+│   ├── models/model.py
+│   └── utils/recommend.py
+├── web-scraper/           # Selenium + BeautifulSoup-based scraper
+│   └── scraper.py
+├── evaluate.py            # Evaluation script using Recall@K / MAP@K
+├── render.yaml            # Render deployment config
+└── README.md
+```
 
 ---
 
@@ -86,73 +94,88 @@ Implemented an `evaluate.py` script to compute:
 ```bash
 ✅ Mean Recall@10: 1.000
 ✅ Mean MAP@10: 1.050
-🛠️ Running Locally
-1️⃣ Backend
-bash
-Always show details
+```
 
-Copy
+---
+
+## 🛠️ Running Locally
+
+### 1️⃣ Backend
+```bash
 cd backend
 pip install -r requirements.txt
 uvicorn main:app --reload
-2️⃣ Frontend
-bash
-Always show details
+```
 
-Copy
+### 2️⃣ Frontend
+```bash
 cd frontend
 npm install
 npm run dev
-➡ Access at: http://localhost:5173
+```
+➡ Access at: `http://localhost:5173`
 
-3️⃣ Web Scraper
-bash
-Always show details
-
-Copy
+### 3️⃣ Web Scraper
+```bash
 cd web-scraper
 pip install -r requirements.txt
 python scraper.py
-Ensure chromedriver is installed.
+```
+Ensure `chromedriver` is installed.
 
-☁️ Deployment Guide
-Render (Backend)
-Configure via render.yaml
+---
 
-Start command:
+## ☁️ Deployment Guide
 
-bash
-Always show details
+### Render (Backend)
+- Configure via `render.yaml`
+- Start command:
+  ```bash
+  uvicorn main:app --host=0.0.0.0 --port=10000
+  ```
 
-Copy
-uvicorn main:app --host=0.0.0.0 --port=10000
-Vercel (Frontend)
-React app deployed via Vercel
+### Vercel (Frontend)
+- React app deployed via Vercel
+- Set backend API URL in `.env` or `vite.config.js`
 
-Set backend API URL in .env or vite.config.js
+---
 
+## 📷 Screenshots
 
-📈 Evaluation Output
+### 🔍 Input + Result UI
 
-🔧 Future Enhancements
- Improve skill extraction using spaCy or OpenAI
+![Query Form + Results](screenshots/shl3.png)
 
- Support multi-lingual job descriptions
+### 📈 Evaluation Output
 
- Dynamic test filtering in frontend
+![Evaluation Results](screenshots/shl2.png)
 
- Add user preference learning (e.g. preferred duration range)
+---
 
-🧑‍💻 Author
-Ravadagundi Sanath Kumar
-📧 ravadagundisanath@gmail.com
+## 🔧 Future Enhancements
 
-🔗 Links
-🌐 Live Demo: https://shl-frontend-delta.vercel.app/
+- [ ] Improve skill extraction using spaCy or OpenAI
+- [ ] Support multi-lingual job descriptions
+- [ ] Dynamic test filtering in frontend
+- [ ] Add user preference learning (e.g. preferred duration range)
 
-📡 API Endpoint: https://shl-backend-production.up.railway.app/recommend
+---
 
-🛠 GitHub: https://github.com/sanathkumarr/SHL
+## 🧑‍💻 Author
 
-📄 License
-MIT License – See LICENSE for details. 
+**Ravadagundi Sanath Kumar**  
+📧 [ravadagundisanath@gmail.com](mailto:ravadagundisanath@gmail.com)
+
+---
+
+## 🔗 Links
+
+- 🌐 **Live Demo**: [https://shl-frontend-delta.vercel.app/](https://shl-frontend-delta.vercel.app/)  
+- 📡 **API Endpoint**: [https://shl-backend-production.up.railway.app/recommend](https://shl-backend-production.up.railway.app/recommend)  
+- 🛠 **GitHub**: [https://github.com/sanathkumarr/SHL](https://github.com/sanathkumarr/SHL)
+
+---
+
+## 📄 License
+
+MIT License – See `LICENSE` for details.
