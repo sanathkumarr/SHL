@@ -1,192 +1,158 @@
-# SHL Assessment Recommendation System
+# 🧠 SHL Assessment Recommendation System
 
-An end-to-end, AI-powered solution to recommend SHL assessments tailored to natural language job descriptions or job posting URLs.
+A GenAI-powered end-to-end system that recommends the most relevant SHL assessments from natural language job descriptions or job posting URLs. This system automates the evaluation process using web scraping, semantic retrieval, and filtering logic.
 
-This project is composed of:
+---
 
-- 🧠 **Backend**: A FastAPI-powered recommendation engine using sentence embeddings and semantic similarity  
-- 💻 **Frontend**: A modern, animated React interface with TailwindCSS  
-- 🕷️ **Web Scraper**: A Selenium and BeautifulSoup-based tool to extract SHL assessment data  
+## 🧩 System Components
+
+- **⚙ Backend** — FastAPI app with semantic search logic and filtering  
+- **💻 Frontend** — React + TailwindCSS UI with animated interactions  
+- **🕸 Web Scraper** — Selenium & BeautifulSoup tool to extract SHL catalog  
+- **📊 Evaluator** — A scoring script to compute Recall@K and MAP@K
+
+---
+
+## 🧠 Recommendation Logic
+
+- Embeds job descriptions using `all-MiniLM-L6-v2` from SentenceTransformers
+- Computes cosine similarity with pre-embedded SHL assessment data
+- Applies hard filters on:
+  - **Test Type**
+  - **Duration**
+  - **Extracted Skills** (via basic NLP/keyword parsing)
+- Ranks top-N most relevant assessments based on semantic similarity
 
 ---
 
 ## 📁 Project Structure
 
-```
-shl-assessment-recommender/
-├── frontend/           # React-based frontend UI
-├── backend/            # FastAPI backend with recommendation logic
-├── web-scraper/        # Scraper for SHL assessment data
-├── render.yaml         # Render deployment config (for backend)
-├── README.md           # Project documentation
-```
+shl-assessment-recommender/ ├── frontend/ # React UI ├── backend/ # FastAPI backend │ ├── data/shl_assessments.csv │ ├── main.py │ ├── models/model.py │ └── utils/recommend.py ├── web-scraper/ # Selenium + BeautifulSoup-based scraper │ └── scraper.py ├── evaluate.py # Evaluation script using Recall@K / MAP@K ├── render.yaml # Render deployment config └── README.md
+
+markdown
+Always show details
+
+Copy
 
 ---
 
-## 🚀 Features
+## 🚀 Key Features
 
-### 🔍 Intelligent Assessment Recommendation
-- Accepts free-text job descriptions or URLs
-- Extracts key skills and requirements using NLP
-- Ranks SHL assessments using semantic similarity
-- Returns top-matching assessments with metadata
+### 🔍 Intelligent Matching
 
-### 🖥️ Frontend Highlights
-- Clean and responsive UI built with React + TailwindCSS
-- Input options for natural language or job description URL
-- Dynamic transitions and animations using Framer Motion
-- Displays detailed, clickable assessment results
+- Accepts either raw job text or a job post URL
+- Extracts relevant skills & filters irrelevant assessments
+- Returns Top-N ranked results with metadata and links
 
-### ⚙️ Backend Highlights
-- FastAPI with `/recommend` and `/health` endpoints
-- Utilizes sentence-transformers for embedding logic
-- Skill extraction, filtering, and similarity ranking
-- Auto-maps assessment URLs to names and metadata
+### 🖥️ Modern Frontend
+
+- React + TailwindCSS + Framer Motion UI
+- Clean form to input queries or URLs
+- Animated result cards with click-through links
+- Skill badge display and test metadata
+
+### ⚙️ FastAPI Backend
+
+- `/recommend`: Takes query and returns ranked SHL assessments
+- `/health`: Service status endpoint
+- Modular logic split into:
+  - Embedding (SentenceTransformers)
+  - Filtering (based on duration, test type, skills)
+  - Ranking (cosine similarity)
 
 ### 🕸️ Web Scraper
-- Navigates SHL product catalog using Selenium
-- Parses structured data with BeautifulSoup
-- Extracts: name, duration, type, description, remote/adaptive support
-- Saves data as a structured CSV file for backend use
+
+- Selenium automates navigation of SHL product catalog
+- BeautifulSoup parses structured content (tables, details)
+- Extracted fields:
+  - Name, URL, Duration
+  - Test Type, Description
+  - Job Levels, Remote/Adaptive support, Languages
+
+- Output saved as: `backend/data/shl_assessments.csv`
 
 ---
 
-## 📦 Backend
+## 📊 Evaluation
 
-**Directory**: `backend/`
+Implemented an `evaluate.py` script to compute:
+- **Recall@10**
+- **MAP@10**
 
-### Structure:
-```
-backend/
-├── main.py                  # FastAPI app entrypoint
-├── data/shl_assessments.csv
-├── models/model.py          # Embedding model logic
-├── utils/recommend.py       # Recommendation pipeline
-├── requirements.txt
-```
+### Ground Truth Source:
+- Extracted from SHL dataset — used `description` as query and matched exact assessment title as ground truth.
 
-### Run Locally:
+### Result (Sample):
 ```bash
+✅ Mean Recall@10: 1.000
+✅ Mean MAP@10: 1.050
+🛠️ Running Locally
+1️⃣ Backend
+bash
+Always show details
+
+Copy
 cd backend
 pip install -r requirements.txt
 uvicorn main:app --reload
-```
+2️⃣ Frontend
+bash
+Always show details
 
-### API Endpoints:
-- `GET /health`: Service status check
-- `POST /recommend`: Get assessment recommendations
-
-### Example Request:
-```json
-{
-  "query": "Looking for a senior Python developer for backend role",
-  "url": ""
-}
-```
-
----
-
-## 🎨 Frontend
-
-**Directory**: `frontend/`
-
-### Built with:
-- React + Vite
-- TailwindCSS
-- Framer Motion for animation
-- Lucide React icons
-
-### Run Locally:
-```bash
+Copy
 cd frontend
 npm install
 npm run dev
-```
+➡ Access at: http://localhost:5173
 
-Access at: [http://localhost:5173](http://localhost:5173)
+3️⃣ Web Scraper
+bash
+Always show details
 
-### Customizations:
-- Connects to backend `/recommend`
-- Maps catalog CSV to display proper assessment names
-- Uses animated components for better UX
-
----
-
-## 🕷️ Web Scraper
-
-**Directory**: `web-scraper/`
-
-### Structure:
-```
-web-scraper/
-├── scraper.py              # Main scraping script
-├── requirements.txt
-└── output/shl_assessments.csv
-```
-
-### Run Scraper:
-```bash
+Copy
 cd web-scraper
 pip install -r requirements.txt
 python scraper.py
-```
+Ensure chromedriver is installed.
 
-> Ensure you have [ChromeDriver](https://chromedriver.chromium.org/downloads) installed and compatible with your browser version.
+☁️ Deployment Guide
+Render (Backend)
+Configure via render.yaml
 
-The output CSV is saved and used in the `backend/data` folder.
+Start command:
 
----
+bash
+Always show details
 
-## ☁️ Deployment (Render)
+Copy
+uvicorn main:app --host=0.0.0.0 --port=10000
+Vercel (Frontend)
+React app deployed via Vercel
 
-### Backend (FastAPI)
-- Managed via `render.yaml`
-- **Start Command**:
-  ```bash
-  uvicorn main:app --host=0.0.0.0 --port=10000
-  ```
+Set backend API URL in .env or vite.config.js
 
-- Files like `shl_assessments.csv` should be committed within the `backend/data/` directory
 
-### Frontend
-- Deploy separately using Vercel, Netlify, or Render Static Sites
-- Set environment variable for backend API URL if needed
-- Update `vite.config.js` or `.env` as required
+📈 Evaluation Output
 
----
+🔧 Future Enhancements
+ Improve skill extraction using spaCy or OpenAI
 
-## 🔧 Future Enhancements
+ Support multi-lingual job descriptions
 
-- [ ] Add user authentication (optional)
-- [ ] Add advanced filtering (by test type, duration, etc.)
-- [ ] Enhance URL parsing using OpenAI or NLP techniques
-- [ ] Introduce caching and batching for high performance
-- [ ] Extend support for multi-language descriptions
+ Dynamic test filtering in frontend
 
----
+ Add user preference learning (e.g. preferred duration range)
 
-## 📌 Tips
+🧑‍💻 Author
+Ravadagundi Sanath Kumar
+📧 ravadagundisanath@gmail.com
 
-- Always keep `shl_assessments.csv` updated via the scraper
-- Backend and frontend can run independently or via a proxy
-- Ensure CORS is enabled in FastAPI for frontend-backend communication
+🔗 Links
+🌐 Live Demo: https://shl-frontend-delta.vercel.app/
 
----
+📡 API Endpoint: https://shl-backend-production.up.railway.app/recommend
 
-## 👨‍💻 Author
+🛠 GitHub: https://github.com/sanathkumarr/SHL
 
-- **Ravadagundi Sanath Kumar** – AI Engineer  
-- 📧 Email: [ravadagundisanath@gmail.com](mailto:ravadagundisanath@gmail.com)
-
----
-
-## 🌐 Demo
-
-- 🔗 **Live Demo**: [https://shl-frontend-delta.vercel.app/](https://shl-frontend-delta.vercel.app/)  
-- 📡 **API Endpoint**: [https://shl-backend-rtjg.onrender.com/recommend](https://shl-backend-rtjg.onrender.com/recommend)
-
----
-
-## 📝 License
-
-This project is licensed under the MIT License. See `LICENSE` for details.
+📄 License
+MIT License – See LICENSE for details. 
